@@ -1,0 +1,84 @@
+[
+  {
+    "name": "Servis Motor Ringan",
+    "type": "minor",
+    "chance": 8,
+    "cost": 70000,
+    "health": 0,
+    "stress": 2
+  },
+  {
+    "name": "Periksa Kesehatan Rutin",
+    "type": "minor",
+    "chance": 5,
+    "cost": 60000,
+    "health": 4,
+    "stress": -2
+  },
+  {
+    "name": "Sakit Flu Ringan",
+    "type": "minor",
+    "chance": 7,
+    "cost": 70000,
+    "health": -5,
+    "stress": 5
+  },
+  {
+    "name": "Bonus Kinerja dari Kantor",
+    "type": "bonus",
+    "chance": 15,
+    "reward": 350000,
+    "health": 0,
+    "stress": -4
+  },
+  {
+    "name": "Cashback Besar Belanja Bulanan",
+    "type": "bonus",
+    "chance": 18,
+    "reward": 150000,
+    "health": 0,
+    "stress": -2
+  },
+  {
+    "name": "Hadiah Loyalty Bank",
+    "type": "bonus",
+    "chance": 12,
+    "reward": 200000,
+    "health": 0,
+    "stress": 0
+  },
+  {
+    "name": "Teman Mengembalikan Utang Lama",
+    "type": "bonus",
+    "chance": 10,
+    "reward": 250000,
+    "health": 0,
+    "stress": -3
+  },
+  {
+    "name": "Voucher Belanja Kebutuhan Pokok",
+    "type": "bonus",
+    "chance": 10,
+    "reward": 100000,
+    "health": 0,
+    "stress": -1
+  },
+  {
+    "name": "Kecelakaan Kecil Kendaraan",
+    "type": "major",
+    "chance": 4,
+    "percent_loss": 6,
+    "months_loss": 0,
+    "health": -6,
+    "stress": 10
+  },
+  {
+    "name": "Pemotongan Gaji Sementara",
+    "type": "major",
+    "chance": 4,
+    "percent_loss": 4,
+    "months_loss": 1,
+    "health": 0,
+    "stress": 8
+  }
+]

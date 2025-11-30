@@ -1,0 +1,899 @@
+/* =========================================================
+   FORTUNARY - style.css
+   ========================================================= */
+
+/* ===== Global ===== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: radial-gradient(circle at top, #0f172a 0%, #020617 45%, #000000 100%);
+    color: #e5e7eb;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* ===== Layout Utama Game ===== */
+
+.page-shell {
+    max-width: 1200px;
+    margin: 32px auto;
+    padding: 0 16px 32px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    background: conic-gradient(from 200deg, #22c55e, #38bdf8, #8b5cf6, #22c55e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.6);
+}
+
+.brand-logo-inner {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: #020617;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: #38bdf8;
+}
+
+.brand-text-title {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.brand-text-sub {
+    font-size: 13px;
+    color: #9ca3af;
+}
+
+.badge-mode {
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid #1e293b;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #9ca3af;
+}
+
+/* main grid */
+
+.grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 18px;
+}
+
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ===== Cards ===== */
+
+.card {
+    background: linear-gradient(145deg, #020617, #020617);
+    border-radius: 18px;
+    padding: 18px 18px 14px;
+    border: 1px solid #1f2937;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.14), transparent 60%);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-title-pill {
+    width: 7px;
+    height: 18px;
+    border-radius: 999px;
+    background: linear-gradient(to bottom, #22c55e, #38bdf8);
+}
+
+.card-subtitle {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+/* ===== Status Panel (Saldo / Market) ===== */
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 14px;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-size: 11px;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.stat-value {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.stat-highlight {
+    color: #22c55e;
+}
+
+/* ===== Pengaturan Tantangan Keuangan (baru) ===== */
+
+.settings-box {
+    margin-top: 10px;
+    padding: 10px 11px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.98);
+    border: 1px solid #1f2937;
+}
+
+.settings-header-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.settings-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #9ca3af;
+}
+
+.settings-subtitle {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+.settings-form {
+    margin: 0;
+    margin-top: 6px;
+}
+
+.settings-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.settings-item {
+    display: block;
+    cursor: pointer;
+}
+
+.settings-item input[type="checkbox"] {
+    display: none;
+}
+
+.settings-item-body {
+    border-radius: 14px;
+    padding: 8px 9px;
+    background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), #020617);
+    border: 1px solid #111827;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease, transform 0.08s ease;
+}
+
+.settings-item-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.settings-item-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: #e5e7eb;
+}
+
+.settings-item-text {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+/* state aktif (checkbox dicentang) */
+.settings-item input[type="checkbox"]:checked + .settings-item-body {
+    border-color: #38bdf8aa;
+    background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.15), #020617);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.9);
+    transform: translateY(-1px);
+}
+
+/* hover */
+
+.settings-item-body:hover {
+    border-color: #1f2937;
+}
+
+.settings-item input[type="checkbox"]:checked + .settings-item-body:hover {
+    border-color: #38bdf8;
+}
+
+/* chip label */
+
+.settings-chip {
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid transparent;
+}
+
+.chip-red {
+    background: rgba(248, 113, 113, 0.12);
+    border-color: rgba(248, 113, 113, 0.5);
+    color: #fecaca;
+}
+
+.chip-yellow {
+    background: rgba(234, 179, 8, 0.12);
+    border-color: rgba(234, 179, 8, 0.5);
+    color: #facc15;
+}
+
+.chip-blue {
+    background: rgba(59, 130, 246, 0.16);
+    border-color: rgba(59, 130, 246, 0.5);
+    color: #bfdbfe;
+}
+
+.chip-green {
+    background: rgba(34, 197, 94, 0.16);
+    border-color: rgba(34, 197, 94, 0.5);
+    color: #bbf7d0;
+}
+
+.chip-purple {
+    background: rgba(168, 85, 247, 0.16);
+    border-color: rgba(168, 85, 247, 0.5);
+    color: #e9d5ff;
+}
+
+.settings-button {
+    margin-top: 2px;
+    border-radius: 999px;
+    border: 0;
+    padding: 6px 11px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(56, 189, 248, 0.16);
+    color: #e5e7eb;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+.settings-button:hover {
+    background: rgba(56, 189, 248, 0.25);
+}
+
+/* ===== Progress Bars (Health / Stress / Luck) ===== */
+
+.progress-group {
+    margin-top: 8px;
+}
+
+.progress-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #9ca3af;
+    margin-bottom: 2px;
+}
+
+.progress-shell {
+    background: #020617;
+    border-radius: 999px;
+    overflow: hidden;
+    height: 9px;
+    border: 1px solid #111827;
+}
+
+.progress-inner {
+    height: 100%;
+    transition: width 0.35s ease;
+}
+
+.progress-health {
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.progress-stress {
+    background: linear-gradient(90deg, #f97316, #ef4444);
+}
+
+.progress-luck {
+    background: linear-gradient(90deg, #38bdf8, #8b5cf6);
+}
+
+/* ===== Status Strip (info goal / ending) ===== */
+
+.status-strip {
+    margin-top: 12px;
+    padding: 10px 11px;
+    border-radius: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: radial-gradient(circle at left top, rgba(34, 197, 94, 0.14), #020617);
+    border: 1px solid #16a34a33;
+    font-size: 12px;
+}
+
+.status-strip-bad {
+    background: radial-gradient(circle at left top, rgba(239, 68, 68, 0.16), #020617);
+    border-color: #b91c1c66;
+}
+
+.status-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    background: #16a34a33;
+}
+
+.status-icon-bad {
+    background: #b91c1c44;
+}
+
+.status-text-main {
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.status-text-sub {
+    color: #9ca3af;
+}
+
+/* ===== Actions / Tombol Aksi ===== */
+
+.actions {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.btn {
+    border-radius: 999px;
+    border: 0;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0f172a;
+    color: #e5e7eb;
+    border: 1px solid #1f2937;
+    transition: transform 0.09s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.btn-main {
+    background: radial-gradient(circle at top left, #22c55e, #15803d);
+    border-color: #22c55e77;
+}
+
+.btn-risk-low {
+    background: radial-gradient(circle at top left, #22c55e22, #0f172a);
+}
+
+.btn-risk-high {
+    background: radial-gradient(circle at top left, #f9731622, #0f172a);
+}
+
+.btn-light {
+    background: radial-gradient(circle at top left, #38bdf822, #0f172a);
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 25px rgba(0,0,0,0.5);
+    border-color: #38bdf888;
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+}
+
+.btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn-label {
+    text-align: left;
+}
+
+.btn-title {
+    font-size: 13px;
+}
+
+.btn-desc {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.btn-tag {
+    font-size: 10px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid #1f2937;
+}
+
+/* tombol reset & logout */
+
+.btn-reset-wrap {
+    margin-top: 10px;
+}
+
+.btn-reset {
+    width: 100%;
+    border-radius: 10px;
+    border: 0;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    background: rgba(239, 68, 68, 0.09);
+    color: #fecaca;
+    border: 1px solid #b91c1c66;
+    transition: background 0.15s ease, transform 0.08s ease;
+}
+
+.btn-reset:hover {
+    background: rgba(239, 68, 68, 0.18);
+    transform: translateY(-1px);
+}
+
+.btn-reset:active {
+    transform: translateY(0);
+}
+
+/* ===== Log & Event list ===== */
+
+.log-box {
+    max-height: 220px;
+    overflow-y: auto;
+    font-size: 12px;
+    line-height: 1.4;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: #4b5563 #020617;
+}
+
+.log-box::-webkit-scrollbar {
+    width: 6px;
+}
+.log-box::-webkit-scrollbar-track {
+    background: #020617;
+}
+.log-box::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 999px;
+}
+
+.log-entry {
+    padding: 4px 0;
+    border-bottom: 1px dashed #111827;
+    color: #d1d5db;
+}
+
+.log-entry:first-child {
+    border-top: 1px dashed #111827;
+}
+
+.log-empty {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+/* JSON event list (tampilan rapi, bukan raw JSON) */
+
+.event-list {
+    margin-top: 10px;
+    max-height: 160px;
+    overflow-y: auto;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: #4b5563 #020617;
+    font-size: 12px;
+}
+
+.event-list::-webkit-scrollbar {
+    width: 6px;
+}
+.event-list::-webkit-scrollbar-track {
+    background: #020617;
+}
+.event-list::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 999px;
+}
+
+.event-item {
+    padding: 5px 0;
+    border-bottom: 1px dashed #111827;
+}
+
+.event-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-name {
+    font-weight: 600;
+}
+
+.event-type {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.event-type-minor {
+    background: rgba(59, 130, 246, 0.18);
+    color: #bfdbfe;
+}
+
+.event-type-bonus {
+    background: rgba(34, 197, 94, 0.18);
+    color: #bbf7d0;
+}
+
+.event-type-major {
+    background: rgba(239, 68, 68, 0.18);
+    color: #fecaca;
+}
+
+.event-meta {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+/* ===== Footer hint ===== */
+
+.footer-hint {
+    margin-top: 10px;
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+/* ===== Login Page ===== */
+
+.login-shell {
+    max-width: 720px;
+    margin: 80px auto;
+    padding: 0 16px;
+}
+
+.login-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px;
+}
+
+@media (max-width: 800px) {
+    .login-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.login-card {
+    background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.22), #020617);
+    border-radius: 18px;
+    padding: 22px 20px 18px;
+    border: 1px solid #1f2937;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+.login-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.login-sub {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-bottom: 10px;
+}
+
+.login-form-group {
+    margin-bottom: 10px;
+}
+
+.login-label {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-bottom: 4px;
+}
+
+.login-input {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #1f2937;
+    padding: 8px 10px;
+    font-size: 13px;
+    background: #020617;
+    color: #e5e7eb;
+}
+
+.login-input:focus {
+    outline: none;
+    border-color: #38bdf8;
+}
+
+.login-submit {
+    width: 100%;
+    margin-top: 6px;
+    border-radius: 999px;
+    border: 0;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: radial-gradient(circle at top left, #22c55e, #15803d);
+    color: #e5e7eb;
+    border: 1px solid #22c55e77;
+    transition: transform 0.09s ease, box-shadow 0.15s ease;
+}
+
+.login-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 25px rgba(0,0,0,0.5);
+}
+
+.login-error {
+    font-size: 12px;
+    color: #fecaca;
+    background: rgba(239, 68, 68, 0.15);
+    border-radius: 10px;
+    padding: 7px 9px;
+    border: 1px solid #b91c1c66;
+    margin-bottom: 8px;
+}
+
+.login-success {
+    font-size: 12px;
+    color: #bbf7d0;
+    background: rgba(34, 197, 94, 0.18);
+    border-radius: 10px;
+    padding: 7px 9px;
+    border: 1px solid #16a34a66;
+    margin-bottom: 8px;
+}
+
+.login-footer {
+    margin-top: 10px;
+    font-size: 11px;
+    color: #9ca3af;
+    text-align: center;
+}
+
+/* user info chip */
+
+.user-chip {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #1f2937;
+    color: #9ca3af;
+}
+
+/* ===== Image styling (online images) ===== */
+
+.login-side-image,
+.game-side-image {
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 10px;
+    object-fit: cover;
+    max-height: 160px;
+    border: 1px solid #1f2937;
+}
+
+/* ===== Market info & legend ===== */
+
+.market-info {
+    margin-top: 6px;
+    padding: 6px 9px;
+    border-radius: 10px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px dashed #1f2937;
+    font-size: 11px;
+}
+
+.market-info-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9ca3af;
+    margin-bottom: 3px;
+}
+
+.market-info-text {
+    font-size: 12px;
+    color: #e5e7eb;
+}
+
+.market-legend {
+    font-size: 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.market-legend-item {
+    padding: 4px 6px;
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid #111827;
+}
+
+.market-legend-state {
+    font-weight: 600;
+    margin-bottom: 2px;
+    color: #e5e7eb;
+}
+
+.market-legend-desc {
+    color: #9ca3af;
+}
+
+/* ===== Tutorial screen ===== */
+
+.tutorial-shell {
+    max-width: 1024px;
+    margin: 32px auto;
+    padding: 0 16px 32px;
+}
+
+.tutorial-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 18px;
+}
+
+@media (max-width: 900px) {
+    .tutorial-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.tutorial-card {
+    position: relative;
+}
+
+.tutorial-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.tutorial-section-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9ca3af;
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+
+.tutorial-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: #e5e7eb;
+}
+
+.tutorial-list li {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+.tutorial-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.16);
+    border: 1px solid #38bdf8aa;
+    white-space: nowrap;
+}
+
+.tutorial-start-btn {
+    margin-top: 8px;
+    border-radius: 999px;
+    border: 0;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: radial-gradient(circle at top left, #22c55e, #15803d);
+    color: #e5e7eb;
+    border: 1px solid #22c55e77;
+    transition: transform 0.09s ease, box-shadow 0.15s ease;
+}
+
+.tutorial-start-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 25px rgba(0,0,0,0.5);
+}

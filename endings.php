@@ -1,9 +1,7 @@
 <?php
-// endings.php
 session_start();
 require_once __DIR__ . '/game.php';
 
-// Ambil hasil game terakhir (jika ada)
 $last = null;
 if (isset($_SESSION['game'])) {
     $game = unserialize($_SESSION['game'], ['allowed_classes' => [Player::class, Game::class]]);
@@ -32,7 +30,6 @@ if (isset($_SESSION['game'])) {
 <body>
 <div class="page-shell">
 
-    <!-- Header -->
     <header class="header">
         <div class="brand">
             <div class="brand-logo">
@@ -60,7 +57,6 @@ if (isset($_SESSION['game'])) {
     </header>
 
     <main class="grid">
-        <!-- Kartu: Highlight Hasil Terakhir -->
         <section class="card">
             <div class="card-header">
                 <div class="card-title"><span class="card-title-pill"></span><span>Ringkasan Run Terakhir</span></div>
@@ -121,7 +117,6 @@ if (isset($_SESSION['game'])) {
             <?php endif; ?>
         </section>
 
-        <!-- Kartu: Rute Permainan -->
         <section class="card">
             <div class="card-header">
                 <div class="card-title"><span class="card-title-pill"></span><span>Rute Permainan</span></div>
@@ -171,7 +166,6 @@ if (isset($_SESSION['game'])) {
             </div>
         </section>
 
-        <!-- Kartu: Ending Umum -->
         <section class="card">
             <div class="card-header">
                 <div class="card-title"><span class="card-title-pill"></span><span>Ending Umum</span></div>
@@ -237,7 +231,6 @@ if (isset($_SESSION['game'])) {
             </div>
         </section>
 
-        <!-- Kartu: Ending Khusus (Mode Tantangan Aktif) -->
         <section class="card">
             <div class="card-header">
                 <div class="card-title"><span class="card-title-pill"></span><span>Ending Khusus — Mode Tantangan</span></div>

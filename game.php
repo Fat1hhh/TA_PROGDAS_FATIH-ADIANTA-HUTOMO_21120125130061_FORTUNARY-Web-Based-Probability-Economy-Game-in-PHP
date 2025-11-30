@@ -1,17 +1,6 @@
 <?php
-// game.php — FORTUNARY core logic
-// - Difficulty lebih ramah pemain
-// - Lucky events lebih sering & lebih positif
-// - Max 1 event JSON/bulan
-// - Ending khusus untuk mode tantangan aktif
-
 session_start();
 
-/**
- * ===========================
- *  Player
- * ===========================
- */
 class Player {
     private string $name;
     private int $balance;
@@ -21,16 +10,14 @@ class Player {
     private int $month;
 
     public function __construct(string $name = "Pemain") {
-        // Buff awal agar tidak cepat “habis”
         $this->name    = $name;
-        $this->balance = 1200000; // saldo awal lebih besar
+        $this->balance = 1200000;
         $this->health  = 80;
         $this->stress  = 20;
         $this->luck    = 50;
         $this->month   = 1;
     }
 
-    // ===== GETTERS =====
     public function getName(): string { return $this->name; }
     public function getBalance(): int { return $this->balance; }
     public function getHealth(): int  { return $this->health; }
@@ -38,8 +25,6 @@ class Player {
     public function getLuck(): int    { return $this->luck; }
     public function getMonth(): int   { return $this->month; }
 
-    // ===== SETTERS =====
-    // saldo boleh minus (cek batas di ending)
     public function setBalance(int $value): void {
         $this->balance = $value;
     }
@@ -56,7 +41,6 @@ class Player {
         $this->month++;
     }
 
-    // helpers
     public function addBalance(int $value): void { $this->setBalance($this->balance + $value); }
     public function addHealth(int $value): void  { $this->setHealth($this->health + $value); }
     public function addStress(int $value): void  { $this->setStress($this->stress + $value); }
@@ -74,23 +58,16 @@ class Player {
     }
 }
 
-
-/**
- * ===========================
- *  Game
- * ===========================
- */
 class Game {
     private Player $player;
     private string $marketState;
     private array  $logMessages = [];
     private bool   $gameOver = false;
     private string $statusMessage = "";
-    private bool   $salaryBlocked = false; // efek PHK sementara
+    private bool   $salaryBlocked = false;
 
     private array $events = [];
 
-    // tracking route
     private array  $routeStats = [
         'save'        => 0,
         'invest_low'  => 0,
@@ -102,10 +79,8 @@ class Game {
     private string $endingTitle = "";
     private string $routeLabel  = "";
 
-    // goals
     private array $goalInfo = [];
 
-    // tantangan
     private array $settings = [
         'debt'          => false,
         'highInflation' => false,
@@ -114,7 +89,6 @@ class Game {
         'volatileJob'   => false,
     ];
 
-    // deskripsi pasar (untuk UI)
     private array $marketDescriptions = [
         'Boom'     => 'Ekonomi sangat panas, harga aset melesat. Peluang profit besar, tapi risiko gelembung pecah juga tinggi.',
         'Bullish'  => 'Pasar tumbuh positif dan stabil. Probabilitas keuntungan meningkat, risiko masih wajar.',
@@ -141,7 +115,6 @@ class Game {
         $this->log("Goal tambahan: " . $this->goalInfo["alt"]);
     }
 
-    // ===== GETTERS =====
     public function getPlayer(): Player            { return $this->player; }
     public function getMarketState(): string       { return $this->marketState; }
     public function getLog(): array                { return $this->logMessages; }
@@ -159,7 +132,6 @@ class Game {
         $this->logMessages[] = $message;
     }
 
-    // ===== Tantangan =====
     private function applySettingsArray(array $settings): void {
         $this->settings['debt']          = !empty($settings['debt']);
         $this->settings['highInflation'] = !empty($settings['highInflation']);
@@ -181,7 +153,6 @@ class Game {
         $this->log("Pengaturan keuangan diubah: " . $this->describeSettings());
     }
 
-    // ===== Events JSON =====
     private function loadEventsFromJson(): void {
         $file = __DIR__ . '/events.json';
         if (file_exists($file)) {
@@ -192,10 +163,8 @@ class Game {
         if (empty($this->events)) $this->events = [];
     }
 
-    // ===== Market =====
     private function rollMarketState(): void {
         $roll = random_int(1, 100);
-        // Lebih jarang Crash, lebih sering Sideways/Bullish
         if ($roll <= 7)         $this->marketState = "Crash";
         elseif ($roll <= 22)    $this->marketState = "Bearish";
         elseif ($roll <= 62)    $this->marketState = "Sideways";
@@ -204,17 +173,16 @@ class Game {
         $this->log("Kondisi pasar bulan ini: " . $this->marketState);
     }
 
-    // ===== Income =====
     private function applyMonthlyIncome(): void {
         if ($this->salaryBlocked) {
             $this->log("Anda terkena PHK sementara. Gaji bulan ini tidak masuk.");
-            $this->salaryBlocked = false; // hanya 1 bulan
+            $this->salaryBlocked = false;
             return;
         }
 
-        $baseSalary = 600000; // dinaikkan
+        $baseSalary = 600000;
         if ($this->settings['volatileJob']) {
-            $shiftPercent = random_int(-15, 20); // -15% s/d +20%
+            $shiftPercent = random_int(-15, 20);
             $delta        = (int) floor($baseSalary * ($shiftPercent / 100));
             $baseSalary   = max(0, $baseSalary + $delta);
             $this->log("Volatile job: gaji bergeser ~{$shiftPercent}% bulan ini.");
@@ -229,11 +197,10 @@ class Game {
         $this->log("Gaji bulanan: +" . number_format($baseSalary, 0, ',', '.'));
     }
 
-    // ===== Expenses =====
     private function applyMonthlyExpenses(): void {
         $month        = $this->player->getMonth();
-        $baseExpenses = 280000; // diturunkan
-        $inflation    = 10000 * max(0, $month - 1); // lebih pelan
+        $baseExpenses = 280000;
+        $inflation    = 10000 * max(0, $month - 1);
 
         if ($this->settings['highInflation']) {
             $inflation = (int) floor($inflation * 1.4);
@@ -243,7 +210,7 @@ class Game {
         $total = $baseExpenses + $inflation + $randomExtra;
 
         if ($this->settings['debt']) {
-            $debtInstallment = 90000; // cicilan lebih kecil
+            $debtInstallment = 90000;
             $total += $debtInstallment;
             $this->log("Cicilan utang: -" . number_format($debtInstallment, 0, ',', '.'));
         }
@@ -271,11 +238,6 @@ class Game {
         }
     }
 
-    /**
-     * ===========================
-     *  Turn Processing
-     * ===========================
-     */
     public function processTurn(string $action): void {
         if ($this->gameOver) {
             $this->statusMessage = "FORTUNARY sudah berakhir. Reset untuk main lagi.";
@@ -290,8 +252,8 @@ class Game {
 
         $this->handleAction($action);
 
-        $this->triggerRandomEvents();   // max 1 per bulan
-        $this->triggerLuckyAccident();  // lebih sering & positif
+        $this->triggerRandomEvents();
+        $this->triggerLuckyAccident();
 
         $this->checkEndConditions();
 
@@ -301,7 +263,6 @@ class Game {
         }
     }
 
-    // route
     private function recordRoute(string $key): void {
         if (isset($this->routeStats[$key])) $this->routeStats[$key]++;
     }
@@ -326,11 +287,6 @@ class Game {
         $this->log("=== ENDING: {$this->endingTitle} ({$this->routeLabel}) ===");
     }
 
-    /**
-     * ===========================
-     *  Actions
-     * ===========================
-     */
     private function handleAction(string $action): void {
         switch ($action) {
             case "save":         $this->recordRoute('save');         $this->handleSave();            break;
@@ -343,7 +299,7 @@ class Game {
     }
 
     private function handleSave(): void {
-        $bonus = random_int(2, 4); // 2–4%
+        $bonus = random_int(2, 4);
         $gain  = (int) floor($this->player->getBalance() * ($bonus / 100));
         $this->player->addBalance($gain);
         $this->player->addStress(-5);
@@ -395,7 +351,7 @@ class Game {
     }
 
     private function handleInvestHighRisk(): void {
-        $amount = 260000; // sedikit lebih murah
+        $amount = 260000;
         if ($this->player->getBalance() < $amount) { $this->log("Saldo tidak cukup."); return; }
         $this->player->addBalance(-$amount);
         $this->log("Investasi risiko tinggi: -" . number_format($amount, 0, ',', '.'));
@@ -410,14 +366,14 @@ class Game {
             elseif ($this->marketState === "Bullish")  $multiplier = random_int(30, 90)  / 100;
             elseif ($this->marketState === "Sideways") $multiplier = random_int(15, 60)  / 100;
             elseif ($this->marketState === "Bearish")  $multiplier = random_int(5, 40)   / 100;
-            else                                        $multiplier = random_int(0, 25)   / 100; // Crash
+            else                                        $multiplier = random_int(0, 25)   / 100;
 
             $profit = (int) floor($amount * (1 + $multiplier));
             $this->player->addBalance($profit);
             $this->player->addStress(10);
             $this->log("Investasi tinggi UNTUNG besar: +" . number_format($profit, 0, ',', '.') . " (market: {$this->marketState}).");
         } else {
-            $lossPercent = random_int(25, 70); // lebih lunak
+            $lossPercent = random_int(25, 70);
             $loss        = (int) floor($amount * ($lossPercent / 100));
             $this->player->addBalance(-$loss);
             $this->player->addStress(14);
@@ -443,12 +399,6 @@ class Game {
         $this->log("Pelatihan keuangan: Luck +8, Stress +9.");
     }
 
-    /**
-     * ===========================
-     *  Events & Lucky
-     * ===========================
-     */
-    // Max 1 event JSON per bulan, bonus lebih mudah dengan Luck
     private function triggerRandomEvents(): void {
         if (empty($this->events)) return;
 
@@ -466,10 +416,10 @@ class Game {
             $type       = $ev['type'] ?? 'minor';
 
             if ($type === 'bonus') {
-                $baseChance += (int) floor($luck / 12); // +0..+8
+                $baseChance += (int) floor($luck / 12);
             }
             if ($type === 'major' && $luck >= 40) {
-                $baseChance -= 10; // jauh lebih jarang
+                $baseChance -= 10;
             }
 
             $baseChance = max(1, min(100, $baseChance));
@@ -477,7 +427,7 @@ class Game {
 
             if ($roll <= $baseChance) {
                 if ($type === 'major') {
-                    $avoidChance = (int) floor($luck / 2); // Luck 60 → 30% lolos
+                    $avoidChance = (int) floor($luck / 2);
                     $avoidRoll   = random_int(1, 100);
                     if ($avoidRoll <= $avoidChance) {
                         $this->log("LUCKY! Menghindari dampak berat: {$ev['name']}.");
@@ -509,7 +459,7 @@ class Game {
                 $this->log("EVENT MAJOR: {$ev['name']} | Kehilangan {$ev['percent_loss']}%: -" . number_format($loss, 0, ',', '.'));
             }
             if (!empty($ev["months_loss"])) {
-                $this->salaryBlocked = true; // 1 bulan
+                $this->salaryBlocked = true;
                 $this->log("EVENT MAJOR: {$ev['name']} | Gaji tidak masuk 1 bulan.");
             }
             $this->player->addHealth((int)$ev["health"]);
@@ -517,14 +467,13 @@ class Game {
         }
     }
 
-    // Lucky tidak sengaja — lebih sering & positif
     private function triggerLuckyAccident(): void {
         $luck       = $this->player->getLuck();
-        $baseChance = 12;                         // dulu 3 → 7, kini 12
-        $bonus      = (int) floor($luck / 8);     // Luck 40 = +5
+        $baseChance = 12;
+        $bonus      = (int) floor($luck / 8);
         if ($this->settings['debt']) $baseChance -= 1;
 
-        $chance = max(5, min(40, $baseChance + $bonus)); // 5–40%
+        $chance = max(5, min(40, $baseChance + $bonus));
         $roll   = random_int(1, 100);
         if ($roll > $chance) return;
 
@@ -574,25 +523,18 @@ class Game {
         }
     }
 
-    /**
-     * ===========================
-     *  Endings (termasuk mode tantangan)
-     * ===========================
-     */
     private function checkEndConditions(): void {
         $balance = $this->player->getBalance();
         $health  = $this->player->getHealth();
         $stress  = $this->player->getStress();
         $month   = $this->player->getMonth();
 
-        // Hitung tantangan aktif
         $s = $this->settings;
         $challengeCount = 0;
         foreach (['debt','highInflation','medicalRisk','sideHustle','volatileJob'] as $k) {
             if (!empty($s[$k])) $challengeCount++;
         }
 
-        // — Ending gagal cepat
         if ($balance <= -500000) {
             $this->setEnding("BANKRUPT", "Bangkrut Berat",
                 "Saldo Anda turun di bawah -Rp 500.000. Tanda beban utang terlalu tinggi.");
@@ -609,14 +551,12 @@ class Game {
             return;
         }
 
-        // — Ending spesial cepat
         if ($month <= 18 && $balance >= 20000000 && $health >= 60 && $stress <= 65) {
             $this->setEnding("EARLY_RETIRE", "Pensiun Dini",
                 "Bebas finansial lebih cepat dengan kondisi prima. Ending spesial!");
             return;
         }
 
-        // — FIN_FREE + Ending khusus tantangan
         $meetsFinFree = ($balance >= 15000000 && $health >= 50 && $stress <= 70 && $month <= 24);
         if ($meetsFinFree) {
             if ($challengeCount >= 3) {
@@ -655,13 +595,11 @@ class Game {
                 );
                 return;
             }
-            // FIN_FREE biasa
             $this->setEnding("FIN_FREE", "Stabil & Terkendali",
                 "Target utama tercapai: saldo kuat, kesehatan cukup, stress terkendali.");
             return;
         }
 
-        // — Waktu habis (bulan 24)
         if ($month >= 24) {
             if (!empty($s['volatileJob']) && $balance > 0) {
                 $this->setEnding(
@@ -680,7 +618,6 @@ class Game {
         }
     }
 
-    // ===== Export state ke array (dipakai index.php / endings.php) =====
     public function toArray(): array {
         return [
             "player"             => $this->player->toArray(),

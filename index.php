@@ -1,11 +1,8 @@
 <?php
-// index.php
 require_once __DIR__ . '/game.php';
 
-// ==== Konfigurasi file user JSON ====
 $usersFile = __DIR__ . '/users.json';
 
-// ==== Fungsi helper user management ====
 function loadUsers(string $file): array {
     if (!file_exists($file)) {
         return [];
@@ -28,7 +25,6 @@ function findUser(array $users, string $username): ?array {
     return null;
 }
 
-// ==== Pastikan minimal ada user demo kalau users.json kosong ====
 $users = loadUsers($usersFile);
 if (empty($users)) {
     $users[] = [
@@ -38,7 +34,6 @@ if (empty($users)) {
     saveUsers($usersFile, $users);
 }
 
-// ==== Handle LOGOUT kapan saja ====
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
     session_destroy();
     header("Location: " . $_SERVER['PHP_SELF']);
@@ -48,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
 $loginError    = '';
 $registerError = '';
 
-// ==== HANDLE LOGIN (kalau belum login) ====
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login']) && empty($_SESSION['logged_in'])) {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -65,14 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login']) && empty($_S
             $_SESSION['logged_in']      = true;
             $_SESSION['username']       = $username;
             $_SESSION['tutorial_seen']  = false;
-            unset($_SESSION['game']); // mulai game baru setiap login
+            unset($_SESSION['game']);
             header("Location: " . $_SERVER['PHP_SELF']);
             exit;
         }
     }
 }
 
-// ==== HANDLE REGISTRASI (kalau belum login) ====
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register']) && empty($_SESSION['logged_in'])) {
     $username = trim($_POST['reg_username'] ?? '');
     $password = $_POST['reg_password'] ?? '';
@@ -97,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register']) && empty(
             ];
             saveUsers($usersFile, $users);
 
-            // Auto login setelah registrasi
             $_SESSION['logged_in']      = true;
             $_SESSION['username']       = $username;
             $_SESSION['tutorial_seen']  = false;
@@ -108,7 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register']) && empty(
     }
 }
 
-// ==== JIKA BELUM LOGIN → TAMPILKAN HALAMAN LOGIN & REGISTER ====
 if (empty($_SESSION['logged_in'])):
 ?>
 <!DOCTYPE html>
@@ -133,7 +124,6 @@ if (empty($_SESSION['logged_in'])):
     </div>
 
     <div class="login-grid">
-        <!-- Kartu Login -->
         <div class="login-card">
             <div class="login-title">Masuk</div>
             <div class="login-sub">
@@ -161,7 +151,6 @@ if (empty($_SESSION['logged_in'])):
             </form>
         </div>
 
-        <!-- Kartu Registrasi + Ilustrasi Online -->
         <div class="login-card">
             <div class="login-title">Registrasi Akun Baru</div>
             <div class="login-sub">
@@ -193,7 +182,6 @@ if (empty($_SESSION['logged_in'])):
                 </button>
             </form>
 
-            <!-- Ilustrasi dari web online -->
             <img
                 src="https://images.pexels.com/photos/4968638/pexels-photo-4968638.jpeg?auto=compress&cs=tinysrgb&w=1200"
                 alt="Ilustrasi perencanaan keuangan"
@@ -208,13 +196,9 @@ if (empty($_SESSION['logged_in'])):
 </body>
 </html>
 <?php
-// stop di sini kalau belum login
 exit;
 endif;
 
-// ==== SUDAH LOGIN → LANJUT KE GAME / TUTORIAL ====
-
-// Inisialisasi game di sesi
 if (!isset($_SESSION['game'])) {
     $username = $_SESSION['username'] ?? 'Pemain';
     $player   = new Player($username);
@@ -224,12 +208,10 @@ if (!isset($_SESSION['game'])) {
     $game = unserialize($_SESSION['game'], ['allowed_classes' => [Player::class, Game::class]]);
 }
 
-// Handle POST untuk tutorial & game
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['tutorial_done'])) {
         $_SESSION['tutorial_seen'] = true;
     } elseif (!empty($_SESSION['tutorial_seen'])) {
-        // Hanya boleh ngejalanin aksi game kalau tutorial sudah selesai
         if (isset($_POST['update_settings'])) {
             $settingsRaw = [
                 'debt'          => isset($_POST['opt_debt']),
@@ -257,7 +239,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Ambil state untuk ditampilkan
 $stateArray         = $game->toArray();
 $player             = $stateArray["player"];
 $events             = $stateArray["events"];
@@ -265,7 +246,6 @@ $goal               = $stateArray["goal"] ?? [];
 $settings           = $stateArray["settings"] ?? [];
 $marketDescriptions = $stateArray["marketDescriptions"] ?? [];
 
-// ==== MODE TUTORIAL (sebelum main) ====
 if (empty($_SESSION['tutorial_seen'])):
 ?>
 <!DOCTYPE html>
@@ -378,9 +358,7 @@ if (empty($_SESSION['tutorial_seen'])):
 </html>
 <?php
 exit;
-endif; // end tutorial mode
-
-// ==== MODE GAME BIASA ====
+endif;
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -392,7 +370,6 @@ endif; // end tutorial mode
 <body>
 <div class="page-shell">
 
-    <!-- Header / Brand -->
     <header class="header">
         <div class="brand">
             <div class="brand-logo">
@@ -422,10 +399,8 @@ endif; // end tutorial mode
         </div>
     </header>
 
-    <!-- Main Grid -->
     <main class="grid">
 
-        <!-- Kiri: Status & Aksi -->
         <section class="card">
             <div class="card-header">
                 <div class="card-title">
@@ -437,7 +412,6 @@ endif; // end tutorial mode
                 </div>
             </div>
 
-            <!-- Status Grid -->
             <div class="status-grid">
                 <div>
                     <div class="stat-label">Saldo</div>
@@ -453,7 +427,6 @@ endif; // end tutorial mode
                 </div>
             </div>
 
-            <!-- Penjelasan singkat kondisi pasar saat ini -->
             <div class="market-info">
                 <div class="market-info-title">Penjelasan kondisi pasar saat ini</div>
                 <div class="market-info-text">
@@ -461,7 +434,6 @@ endif; // end tutorial mode
                 </div>
             </div>
 
-            <!-- Pengaturan tantangan keuangan (UI baru) -->
             <div class="settings-box">
                 <div class="settings-header-row">
                     <div class="settings-title">Tantangan Keuangan</div>
@@ -546,7 +518,6 @@ endif; // end tutorial mode
                 </form>
             </div>
 
-            <!-- Health / Stress / Luck -->
             <div class="progress-group">
                 <div class="progress-label-row">
                     <span>Health</span>
@@ -580,7 +551,6 @@ endif; // end tutorial mode
                 </div>
             </div>
 
-            <!-- Status strip: goal & ending + route -->
             <div class="status-strip <?= $stateArray["gameOver"] ? 'status-strip-bad' : ''; ?>">
                 <div class="status-icon <?= $stateArray["gameOver"] ? 'status-icon-bad' : ''; ?>">
                     <?= $stateArray["gameOver"] ? '!' : '★'; ?>
@@ -614,7 +584,6 @@ endif; // end tutorial mode
                 </div>
             </div>
 
-            <!-- Actions -->
             <form method="post" class="actions">
                 <button type="submit" name="action" value="save"
                         class="btn btn-main"
@@ -673,7 +642,6 @@ endif; // end tutorial mode
             </div>
         </section>
 
-        <!-- Kanan: Log & Event dari JSON + Ilustrasi + legend market -->
         <section class="card">
             <div class="card-header">
                 <div class="card-title">
@@ -755,7 +723,6 @@ endif; // end tutorial mode
                 <?php endif; ?>
             </div>
 
-            <!-- Legend kondisi pasar -->
             <div class="card-subtitle" style="margin-top:10px; margin-bottom:4px;">
                 Kondisi Pasar & Penjelasannya
             </div>
@@ -768,7 +735,6 @@ endif; // end tutorial mode
                 <?php endforeach; ?>
             </div>
 
-            <!-- Ilustrasi dari web online -->
             <img
                 src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1200"
                 alt="Ilustrasi tim menganalisis keuangan"
